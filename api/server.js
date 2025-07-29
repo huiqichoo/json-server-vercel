@@ -1,14 +1,13 @@
 const jsonServer = require('json-server')
 const server = jsonServer.create()
+const middlewares = jsonServer.defaults()
 
-// Load initial data into memory
 const fs = require('fs')
 const path = require('path')
-const filePath = path.join(__dirname, 'db.json')  // use __dirname
-const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-const router = jsonServer.router(data)  // In-memory only
-
-const middlewares = jsonServer.defaults()
+const filePath = path.join(__dirname, 'db.json') // ⬅️ Make sure path is correct
+const raw = fs.readFileSync(filePath, 'utf-8')
+const data = JSON.parse(raw)
+const router = jsonServer.router(data)
 
 server.use(middlewares)
 server.use(jsonServer.rewriter({
@@ -18,5 +17,5 @@ server.use(jsonServer.rewriter({
 server.use(router)
 
 server.listen(3000, () => {
-  console.log('JSON Server is running in memory-only mode')
+  console.log('JSON Server is running')
 })
